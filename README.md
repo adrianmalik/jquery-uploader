@@ -1,13 +1,14 @@
 #jQuery Uploader
 
-##API
+The simplest configuration:
 
-###uploadFile( options )
- Creates Ajax form and uploads the files to server. 
+
 
  ````javascript
-var uploadObj = $("#uploadDivId").uploadFile(options);
+$('.file').upload({
+   url: '/upload'
+});
 ````
 
 #Requirements
-XMLHttpRequest (Level 2), HTML5
+XMLHttpRequest (Level 2), HTML5, jQuery
