@@ -2,7 +2,10 @@
 
 The simplest configuration:
 
-
+ ````html
+ <script src="/jquery/jquery.js"></script>
+ <script src="/jquery-uploader/jquery-uploader.js"></script>
+ ````
 
  ````javascript
 $('.file').upload({
