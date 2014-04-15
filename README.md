@@ -36,7 +36,7 @@ $('input[type="file"]').upload({
             id: 'button-id', //Trigger id attribute 
             class: 'button-class', //Trigger class attribute
             style: 'width:100px' //Trigger style attribute
-            ... //You can add whatever attribute here you want to
+            ... //You can add whatever attribute you want to
         }
     },
     selectFileText: 'Select file from your hard drive', //Text displayed inside button or dropzone
@@ -46,27 +46,28 @@ $('input[type="file"]').upload({
     allowedMimeTypes: ['image/jpeg'], //Allowed mimetypes of uploaded files
     allowedExtensions: ['jpg'], //Allowed extensions of uploaded files
     error: {
-        selector: '[data-jq-upload-error]',
-        attributes: {
+        selector: '[data-jq-upload-error]', //Selector where errors will be set when appear
+        attributes: { //Attributes of error html element
             style: 'border:1px solid red; color:red;'
+            ... //You can add whatever attribute you want to
         }
     },
-    buttons: {
+    buttons: { 
         upload: {
-            text: 'Upload a file'
+            text: 'Upload a file' //Text of upload button
         },
         cancel: {
-            text: 'Remove a file'
+            text: 'Remove a file' //Text of remove button
         }
     },
     upload: {
-        onAbort: function(event, file, preview) {},
-        onError: function(event, file, preview) {},
-        onTimeout: function(event, file, preview) {},
-        onSuccess: function(event, file, preview) {},
-        onLoadEnd: function(event, file, preview) {},
-        onProgress: function(event, file, preview) {},
-        onLoadStart: function(event, file, preview) {}
+        onAbort: function(event, file, preview) {}, //Function that is triggered when request is aborted
+        onError: function(event, file, preview) {}, //Function that is triggered when request upload failed
+        onTimeout: function(event, file, preview) {}, //Function that is triggered after timeout
+        onSuccess: function(event, file, preview) {}, //Function that is triggered after successfully uploading
+        onLoadEnd: function(event, file, preview) {}, //Function that is triggered when request is finished
+        onProgress: function(event, file, preview) {}, //Function that is triggered during upload 
+        onLoadStart: function(event, file, preview) {} //Function that is triggered when upload starts
     }
 });
 ````
