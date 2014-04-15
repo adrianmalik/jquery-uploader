@@ -8,7 +8,7 @@ The simplest configuration:
  ````
 
  ````javascript
-$('.file').upload({
+$('input[type="file"]').upload({
    url: '/upload'
 });
 ````
