@@ -3,7 +3,6 @@ $(document).ready(function() {
      * Upload function for jQuery library
      *
      * @author Adrian Malik <adrian.malik.89@gmail.com>
-     * @version 1.0.0
      */
     $.fn.upload = function (options) {
         var self = this;
@@ -19,9 +18,19 @@ $(document).ready(function() {
                 width: 400,
                 height: 200
             },
+            error: {
+                selector: '[data-jq-upload-error]',
+                attributes: {
+                    style: 'border:1px solid red; color:red;'
+                }
+            },
             buttons: {
-                upload: { text: 'Upload' },
-                cancel: { text: 'Cancel' }
+                upload: {
+                    text: 'Upload'
+                },
+                cancel: {
+                    text: 'Cancel'
+                }
             },
             timeout: 10000,
             selectFileText: 'Select file'
@@ -30,8 +39,8 @@ $(document).ready(function() {
         /* Constant errors of the jQuery uploader */
         self.ERROR_TOO_LARGE_SIZE = 'File is too large. ';
         self.ERROR_TOO_MANY_FILES = 'Too many files selected';
-        self.ERROR_NOT_ALLOWED_EXTENSION = 'File has not have allowed extension. ';
-        self.ERROR_NOT_ALLOWED_MIME_TYPE = 'File has not have allowed mime type. ';
+        self.ERROR_NOT_ALLOWED_EXTENSION = 'File does not have allowed extension. ';
+        self.ERROR_NOT_ALLOWED_MIME_TYPE = 'File does not have allowed mime type. ';
 
         /**
          * Validates single file.
@@ -68,11 +77,11 @@ $(document).ready(function() {
             var error = '';
 
             if(typeof self.options !== 'undefined') {
-                if(typeof self.options.maxSize !== 'undefined') {
+                if(typeof self.options.maxFileSize !== 'undefined') {
                     if(typeof file === 'object') {
                         var size = file.size;
 
-                        if(self.options.maxSize < size) {
+                        if(self.options.maxFileSize < size) {
                             error = self.ERROR_TOO_LARGE_SIZE;
                         }
                     }
@@ -211,14 +220,15 @@ $(document).ready(function() {
             var xhr = new XMLHttpRequest();
             xhr.overrideMimeType('application/json');
             xhr.timeout = self.options.timeout;
-            xhr.addEventListener('load', function(event) { self.loadHandler(event, file, preview); }, false);
-            xhr.addEventListener('error', function(event) { self.errorHandler(event, file, preview); }, false);
-            xhr.addEventListener('abort', function(event) { self.abortHandler(event, file, preview); }, false);
-            xhr.addEventListener('timeout', function(event) { self.timeoutHandler(event, file, preview); }, false);
-            xhr.addEventListener('loadend', function(event) { self.loadendHandler(event, file, preview); }, false);
-            xhr.addEventListener('loadstart', function(event) { self.loadstartHandler(event, file, preview); }, false);
-            xhr.upload.addEventListener('progress', function(event) { self.progressHandler(event, file, preview); }, false);
+            xhr.addEventListener('load', function(event) { self.loadHandler(event, {file: file, preview: preview, input: self} ); }, false);
+            xhr.addEventListener('error', function(event) { self.errorHandler(event, {file: file, preview: preview, input: self} ); }, false);
+            xhr.addEventListener('abort', function(event) { self.abortHandler(event, {file: file, preview: preview, input: self} ); }, false);
+            xhr.addEventListener('timeout', function(event) { self.timeoutHandler(event, {file: file, preview: preview, input: self} ); }, false);
+            xhr.addEventListener('loadend', function(event) { self.loadendHandler(event, {file: file, preview: preview, input: self} ); }, false);
+            xhr.addEventListener('loadstart', function(event) { self.loadstartHandler(event, {file: file, preview: preview, input: self} ); }, false);
+            xhr.upload.addEventListener('progress', function(event) { self.progressHandler(event, {file: file, preview: preview, input: self} ); }, false);
             xhr.open('POST', self.options.url);
+            xhr.setRequestHeader("X-Requested-With",'XMLHttpRequest');
             xhr.send(formData);
         };
 
@@ -229,12 +239,12 @@ $(document).ready(function() {
          * @param {} file
          * @param {} preview
          */
-        self.progressHandler = function(event, file, preview) {
-            $(preview).find('progress').val((event.loaded / event.total) * 100);
+        self.progressHandler = function(event, config) {
+            $(config.preview).find('progress').val((event.loaded / event.total) * 100);
 
             if(typeof self.options.upload !== 'undefined') {
                 if(typeof self.options.upload.onProgress === 'function') {
-                    self.options.upload.onProgress(event, file, preview);
+                    self.options.upload.onProgress(event, config);
                 }
             }
         };
@@ -246,10 +256,10 @@ $(document).ready(function() {
          * @param {} file
          * @param {} preview
          */
-        self.loadstartHandler = function(event, file, preview) {
+        self.loadstartHandler = function(event, config) {
             if(typeof self.options.upload !== 'undefined') {
                 if(typeof self.options.upload.onLoadStart === 'function') {
-                    self.options.upload.onLoadStart(event, file, preview);
+                    self.options.upload.onLoadStart(event, config);
                 }
             }
         };
@@ -261,10 +271,10 @@ $(document).ready(function() {
          * @param {} file
          * @param {} preview
          */
-        self.loadendHandler = function(event, file, preview) {
+        self.loadendHandler = function(event, config) {
             if(typeof self.options.upload !== 'undefined') {
                 if(typeof self.options.upload.onLoadEnd === 'function') {
-                    self.options.upload.onLoadEnd(event, file, preview);
+                    self.options.upload.onLoadEnd(event, config);
                 }
             }
         };
@@ -276,7 +286,7 @@ $(document).ready(function() {
          * @param {} file
          * @param {} preview
          */
-        self.loadHandler = function(event, file, preview) {
+        self.loadHandler = function(event, config) {
             try {
                 var response = event.target.response;
                 var json = JSON.parse(response);
@@ -290,7 +300,7 @@ $(document).ready(function() {
 
             if(typeof self.options.upload !== 'undefined') {
                 if(typeof self.options.upload.onSuccess === 'function') {
-                    self.options.upload.onSuccess(event, file, preview);
+                    self.options.upload.onSuccess(event, config);
                 }
             }
         };
@@ -302,10 +312,10 @@ $(document).ready(function() {
          * @param {} file
          * @param {} preview
          */
-        self.errorHandler = function(event, file, preview) {
+        self.errorHandler = function(event, config) {
             if(typeof self.options.upload !== 'undefined') {
                 if(typeof self.options.upload.onError === 'function') {
-                    self.options.upload.onError(event, file, preview);
+                    self.options.upload.onError(event, config);
                 }
             }
         };
@@ -317,10 +327,10 @@ $(document).ready(function() {
          * @param {} file
          * @param {} preview
          */
-        self.abortHandler = function(event, file, preview) {
+        self.abortHandler = function(event, config) {
             if(typeof self.options.upload !== 'undefined') {
                 if(typeof self.options.upload.onAbort === 'function') {
-                    self.options.upload.onAbort(event, file, preview);
+                    self.options.upload.onAbort(event, config);
                 }
             }
         };
@@ -332,10 +342,10 @@ $(document).ready(function() {
          * @param {} file
          * @param {} preview
          */
-        self.timeoutHandler = function(event, file, preview) {
+        self.timeoutHandler = function(event, config) {
             if(typeof self.options.upload !== 'undefined') {
                 if(typeof self.options.upload.onTimeout === 'function') {
-                    self.options.upload.onTimeout(event, file, preview);
+                    self.options.upload.onTimeout(event, config);
                 }
             }
         };
@@ -350,21 +360,38 @@ $(document).ready(function() {
             var buttonUpload = document.createElement('button');
             var buttonCancel = document.createElement('button')
 
-            buttonUpload.setAttribute('class', 'upload');
-            buttonCancel.setAttribute('class', 'cancel');
+            if(typeof self.options.buttons.upload.attributes !== 'undefined') {
+                for(var attribute in self.options.buttons.upload.attributes) {
+                    buttonUpload.setAttribute(attribute, self.options.buttons.upload.attributes[attribute]);
+                }
+            }
+
+            if(typeof self.options.buttons.cancel.attributes !== 'undefined') {
+                for(var attribute in self.options.buttons.cancel.attributes) {
+                    buttonCancel.setAttribute(attribute, self.options.buttons.cancel.attributes[attribute]);
+                }
+            }
 
             $(buttonUpload).html(self.options.buttons.upload.text);
             $(buttonCancel).html(self.options.buttons.cancel.text);
 
             $(buttonCancel).click(function(clickEvent) {
                 clickEvent.preventDefault();
-                $(preview).remove()
+                $(preview).remove();
+
+                if(typeof self.options.buttons.cancel.onClick === 'function') {
+                    self.options.buttons.cancel.onClick(clickEvent, { preview: preview, file: file, input: self });
+                }
             });
 
             $(buttonUpload).click(function(clickEvent) {
                 clickEvent.preventDefault();
                 self.upload(clickEvent, file, preview);
                 $(preview).find('button:first').remove();
+
+                if(typeof self.options.buttons.upload.onClick === 'function') {
+                    self.options.buttons.upload.onClick(clickEvent, { preview: preview, file: file, input: self });
+                }
             });
 
             $(preview).append(buttonUpload);
