@@ -372,6 +372,9 @@ $(document).ready(function() {
                 }
             }
 
+            buttonUpload.setAttribute('data-jq-upload-button', 'upload');
+            buttonCancel.setAttribute('data-jq-upload-button', 'cancel');
+
             $(buttonUpload).html(self.options.buttons.upload.text);
             $(buttonCancel).html(self.options.buttons.cancel.text);
 
@@ -551,7 +554,6 @@ $(document).ready(function() {
             });
 
             $(dropzone).on('drop', function(dropEvent) {
-
                 dropEvent.preventDefault();
 
                 var files = dropEvent.originalEvent.dataTransfer.files;
@@ -571,12 +573,12 @@ $(document).ready(function() {
         self.setErrorsIfExist = function (errors) {
             if(errors.length !== 0) {
                 if(typeof self.options.error.selector !== 'undefined') {
-                    for(index in errors) {
+                    for(var index in errors) {
                         var paragraph = document.createElement('div');
                         $(paragraph).html(errors[index]);
 
                         if(typeof self.options.error.attributes === 'object') {
-                            for(attributeName in self.options.error.attributes) {
+                            for(var attributeName in self.options.error.attributes) {
                                 $(self.options.error.selector).attr(
                                     attributeName,
                                     self.options.error.attributes[attributeName]
@@ -588,6 +590,41 @@ $(document).ready(function() {
                     }
                 }
             }
+        };
+
+        /**
+         * Sets upload all button if exists in parameters
+         *
+         * @param input
+         */
+        self.setUploadAllButtonIfExists = function(input) {
+            if(typeof self.options.buttons.uploadAll === 'object') {
+                var button = document.createElement('button');
+
+                if(typeof self.options.buttons.uploadAll.text !== 'undefined') {
+                    button.textContent = self.options.buttons.uploadAll.text;
+                } else {
+                    button.textContent = 'Upload all';
+                }
+
+                if(typeof self.options.buttons.uploadAll.attributes !== 'undefined') {
+                    if(typeof self.options.buttons.uploadAll.attributes === 'object') {
+                        for(var attributeName in self.options.buttons.uploadAll.attributes) {
+                            button.setAttribute(attributeName, self.options.buttons.uploadAll.attributes[attributeName]);
+                        }
+                    }
+                }
+
+                button.setAttribute('data-jq-upload-button', 'upload-all');
+
+                $(button).click(function(clickEvent) {
+                    $(this).closest('form').find('[data-jq-upload-button="upload"]').trigger('click');
+                    clickEvent.preventDefault();
+                });
+
+                $(input).after(button);
+            }
+
         }
 
         /**
@@ -604,7 +641,7 @@ $(document).ready(function() {
                 );
             });
 
-            //Replaces input[type="file"] by button or dropzone
+            self.setUploadAllButtonIfExists(input);
             self.replaceInputFile(input);
         });
     };
