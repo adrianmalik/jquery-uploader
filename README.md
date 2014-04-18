@@ -54,20 +54,32 @@ $('input[type="file"]').upload({
     },
     buttons: { 
         upload: {
-            text: 'Upload a file' //Text of upload button
+            text: 'Upload a file' //Text of upload button,
+            attributes: {
+                id: 'button-upload-id',
+                class: 'button-upload-class',
+                ... //You can add whatever attribute you want to
+            },
+            onClick: function(event, config) {} //It will be trigered on click for upload button
         },
         cancel: {
-            text: 'Remove a file' //Text of remove button
+            text: 'Remove a file' //Text of remove button,
+            attributes: {
+                id: 'button-cancel-id',
+                class: 'button-cancel-class',
+                ... //You can add whatever attribute you want to
+            },
+            onClick: function(event, config) {} //It will be trigered on click for cancel button.
         }
     },
     upload: {
-        onAbort: function(event, file, preview) {}, //Function that is triggered when request is aborted
-        onError: function(event, file, preview) {}, //Function that is triggered when request upload failed
-        onTimeout: function(event, file, preview) {}, //Function that is triggered after timeout
-        onSuccess: function(event, file, preview) {}, //Function that is triggered after successfully uploading
-        onLoadEnd: function(event, file, preview) {}, //Function that is triggered when request is finished
-        onProgress: function(event, file, preview) {}, //Function that is triggered during upload 
-        onLoadStart: function(event, file, preview) {} //Function that is triggered when upload starts
+        onAbort: function(event, config) {}, //Function that is triggered when request is aborted
+        onError: function(event, config) {}, //Function that is triggered when request upload failed
+        onTimeout: function(event, config) {}, //Function that is triggered after timeout
+        onSuccess: function(event, config) {}, //Function that is triggered after successfully uploading
+        onLoadEnd: function(event, config) {}, //Function that is triggered when request is finished
+        onProgress: function(event, config) {}, //Function that is triggered during upload 
+        onLoadStart: function(event, config) {} //Function that is triggered when upload starts
     }
 });
 ````
