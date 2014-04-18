@@ -70,7 +70,13 @@ $('input[type="file"]').upload({
                 ... //You can add whatever attribute you want to
             },
             onClick: function(event, config) {} //It will be trigered on click for cancel button.
-        }
+        },
+        uploadAll: {
+            text: 'Upload all files',
+            attributes: {
+                class: 'btn btn-form-submit'
+            }
+        }       
     },
     upload: {
         onAbort: function(event, config) {}, //Function that is triggered when request is aborted
