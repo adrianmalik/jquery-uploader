@@ -290,10 +290,6 @@ $(document).ready(function() {
             try {
                 var response = event.target.response;
                 var json = JSON.parse(response);
-
-                if(typeof json.data !== 'undefined') {
-
-                }
             } catch (exception) {
                 self.setErrorsIfExist([exception]);
             }
@@ -399,6 +395,10 @@ $(document).ready(function() {
 
             $(preview).append(buttonUpload);
             $(preview).append(buttonCancel);
+
+            if(self.options.buttons.cancel.attributes !== 'undefined' && self.options.autoUpload == 1) {
+                $(buttonUpload).trigger('click');
+            }
         };
 
         /**
@@ -412,6 +412,18 @@ $(document).ready(function() {
             progressBar.setAttribute('value', '0');
 
             $(preview).append(progressBar);
+        };
+
+        self.isFileAnImage = function(file) {
+            switch (file.type) {
+                case 'image/jpeg':
+                case 'image/png':
+                case 'image/gif':
+                case 'image/bmp':
+                    return true;
+                default:
+                    return false;
+            }
         };
 
         /**
@@ -430,12 +442,16 @@ $(document).ready(function() {
                                 var reader = new FileReader();
 
                                 reader.onload = function(file) {
+                                    if (typeof self.context.attributes['multiple'] === 'undefined') {
+                                        $(self.options.preview.selector).html('');
+                                    }
+
                                     var preview = document.createElement('div');
                                     $(self.options.preview.selector).append(preview);
                                     self.setFileName(preview, file);
 
                                     return function(onLoadEvent) {
-                                        if(self.isPreviewOptionSet()) {
+                                        if(self.isPreviewOptionSet() && self.isFileAnImage(file)) {
                                             self.setPreviewImage(preview, onLoadEvent);
                                         }
 
