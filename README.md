@@ -27,6 +27,7 @@ $('input[type="file"]').upload({
     url: '/', //The url where the file will be sent to
     preview: { 
         selector: '[data-jq-upload-preview]', //Selector of item where preview will be displayed
+        container: '[data-jq-upload-preview-stored]',
         width: 400, //Width of preview image
         height: 200 //Height or preview image
     },
