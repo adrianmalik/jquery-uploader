@@ -15,6 +15,7 @@ $(document).ready(function() {
             },
             preview: {
                 selector: '[data-jq-upload-preview]',
+                container: '[data-jq-upload-preview-stored]',
                 width: 400,
                 height: 200
             },
@@ -443,7 +444,7 @@ $(document).ready(function() {
 
                                 reader.onload = function(file) {
                                     if (typeof self.context.attributes['multiple'] === 'undefined') {
-                                        $(self.options.preview.selector).html('');
+                                        $(self.options.preview.container).html('');
                                     }
 
                                     var preview = document.createElement('div');
