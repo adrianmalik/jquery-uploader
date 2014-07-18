@@ -219,7 +219,12 @@ $(document).ready(function() {
             var formData = new FormData();
             formData.append('file', file);
             var xhr = new XMLHttpRequest();
-            xhr.overrideMimeType('application/json');
+            
+            
+            if (xhr.overrideMimeType) {
+                xhr.overrideMimeType('application/json');
+            }
+
             xhr.timeout = self.options.timeout;
             xhr.addEventListener('load', function(event) { self.loadHandler(event, {file: file, preview: preview, input: self} ); }, false);
             xhr.addEventListener('error', function(event) { self.errorHandler(event, {file: file, preview: preview, input: self} ); }, false);
