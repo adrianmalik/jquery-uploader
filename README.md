@@ -1,6 +1,6 @@
-HTML5 Uploader
+jQuery Uploader
 ==============
-HTML5 Uploader library is designed for everybody who wants to implement asynchronous files uploader in his project. It is the only uploader which allows you to configure many details and customize your uploading proces however you want.
+jQuery Uploader library is designed for everybody who wants to implement asynchronous files uploader in his project. It is the only uploader which allows you to configure many details and customize your uploading proces however you want.
 
 Simple configuration
 ==============
