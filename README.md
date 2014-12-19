@@ -1,92 +1,306 @@
-#jQuery Uploader
+HTML5 Uploader
+==============
+HTML5 Uploader library is designed for everybody who wants to implement asynchronous files uploader in his project. It is the only uploader which allows you to configure many details and customize your uploading proces however you want.
 
-The simplest configuration:
+Simple configuration
+==============
 
  ````html
-<script src="/jquery/jquery.js"></script>
-<script src="/jquery-uploader/jquery-uploader.js"></script>
+<script src="/jquery/jquery.js"></script> <!-- At least 2.0 version -->
+<script src="/html5-uploader/html5-uploader.js"></script>
+
+<input type="file"> 
+<div id="browser"></div> <!-- File browser element -->
+<div id="preview"></div> <!-- Place where previews will be displayed -->
  ````
 
  ````javascript
+$('input[type="file"]').upload();
+````
+
+Options
+==============
+- browser - is an {Object} element which allows you to select file from hard drive. It can be button with "Select file" text, it can be dropzone div with "Drop your file here" text, it even can be a span or section or every other html element. It depends on you.
+    - render() - is a {Function} where you have to build and return {HTMLElement} of selecting file item.
+
+ ````javascript
 $('input[type="file"]').upload({
-   url: '/upload'
+        browser: {
+            render: function() {
+                var button = document.createElement('button');
+                $(button).text('Select file');
+                $('#browser').html(button);
+                return button;
+            }
+        }
+});
+````
+    - onDrop(htmlElement, event) - is a {Function} where you can implement behaviour for file drop moment.
+
+ ````javascript
+$('input[type="file"]').upload({
+        browser: {
+            onDrop: function(htmlElement, event) {
+                alert('You have just dropped a file!');
+            }
+        }
+});
+````
+    - onClick(htmlElement, event) - is a {Function} where you can implement behaviour for browser click moment.
+
+ ````javascript
+$('input[type="file"]').upload({
+        browser: {
+            onClick: function(htmlElement, event) {
+                alert('You have just click on select file button!');
+            }
+        }
+});
+````
+    - onDragOver(htmlElement, event) - is a {Function} where you can implement behaviour for file dragging-over dropzone moment.
+
+ ````javascript
+$('input[type="file"]').upload({
+        browser: {
+            onDragOver: function(htmlElement, event) {
+                alert('You have just have your file over dropzone');
+            }
+        }
+});
+````
+    - onDragEnter(htmlElement, event) - is a {Function} where you can implement behaviour for file dragging-enter dropzone moment.
+
+ ````javascript
+$('input[type="file"]').upload({
+        browser: {
+            onDragEnter: function(htmlElement, event) {
+                alert('You have just entered your file to dropzone');
+            }
+        }
+});
+````
+- preview - is an {Object} element which allows you to conifugre type of files you are going to upload, design and view about preview elements and many more.
+
+    - render() - is a {Function} where you can buid your preview container and all of it's elements.
+
+ ````javascript
+$('input[type="file"]').upload({
+        preview: {
+            render: function() {
+                var ul = (new Uploader.Html()).getUl(); //same as document.createElement('ul')
+                var li = (new Uploader.Html()).getLi(); //same as document.createElement('li')
+                var div = (new Uploader.Html()).getDiv(); //same as...
+                var upload = (new Uploader.Html()).getButton(); //same as...
+                var cancel = (new Uploader.Html()).getButton(); //...
+                var progress = (new Uploader.Html()).getProgress(); //...
+
+                $(upload).text('Upload file');
+                $(cancel).text('Cancel');
+                $('#preview').html(ul);
+
+                return { 
+                    container: ul,
+                    item: li,
+                    preview: div, //order of this property has meaning
+                    progress: progress, //order of this property has meaning
+                    upload: upload, //order of this property has meaning
+                    cancel: cancel //order of this property has meaning
+                };
+            }
+        }
+});
+````
+    - styles - is an {Object} where you can define styles preview thumbnail.
+
+ ````javascript
+$('input[type="file"]').upload({
+        preview: {
+            styles: { width: '500px', height: '200px' }
+        }
+});
+````
+    - maxFiles - is an {Number} value which describes how many files you can upload.
+
+ ````javascript
+$('input[type="file"]').upload({
+        preview: {
+            maxFiles: 4
+        }
+});
+````
+    - minFileSize - is an {String} value which describes the minimun file size.
+
+ ````javascript
+$('input[type="file"]').upload({
+        preview: {
+            minFileSize: '1KB'
+        }
+});
+````
+    - maxFileSize - is an {String} value which describes the maximum file size.
+
+ ````javascript
+$('input[type="file"]').upload({
+        preview: {
+            maxFileSize: '10MB'
+        }
+});
+````
+    - allowedMimeTypes - is an {Object} of allowed mime types strings.
+
+ ````javascript
+$('input[type="file"]').upload({
+        preview: {
+            allowedMimeTypes: ['image/jpeg', 'image/png']
+        }
+});
+````
+    - allowedExtensions - is an {Object} of allowed file extensions.
+
+ ````javascript
+$('input[type="file"]').upload({
+        preview: {
+            allowedExtensions: ['jpg', 'png']
+        }
+});
+````
+    - forbiddenMimeTypes - is an {Object} of forbidden mime types.
+
+ ````javascript
+$('input[type="file"]').upload({
+        preview: {
+            forbiddenMimeTypes: ['application/pdf']
+        }
+});
+````
+    - forbiddenExtensions - is an {Object} of forbidden file extensions.
+
+ ````javascript
+$('input[type="file"]').upload({
+        preview: {
+            forbiddenExtensions: ['pdf']
+        }
+});
+````
+    - errorMessages - is an {Object} as set of error messages.
+
+ ````javascript
+$('input[type="file"]').upload({
+        preview: {
+            errorMessages: {
+                forbidden: 'You cannot select forbidden file.',
+                tooLargeFile: 'Your file is too large.',
+                tooSmallFile: 'Your file is too small.',
+                tooManyFiles: 'You cannot upload more files.'
+            }
+        }
+});
+````
+    - error - is an {Function} where you can handle one of the error messages.
+
+ ````javascript
+$('input[type="file"]').upload({
+        preview: {
+            error: function(message) {
+                alert(message);
+            }
+        }
+});
+````
+    - upload - is an {Object} as set of preview upload settings.
+
+ ````javascript
+$('input[type="file"]').upload({
+        preview: {
+            upload: {
+                url: '/upload',
+                onLoad: function(event, file, upload) {},
+                onAbort: function(event, file, upload) {},
+                onError: function(event, file, upload) {},
+                onLoadEnd: function(event, file, upload) {},
+                onTimeout: function(event, file, upload) {},
+                onProgress: function(event, file, upload) {},
+                onLoadStart: function(event, file, upload) {}
+            }
+        }
+});
+````
+    - crop - is a {Boolean} value reserved for future reasons to allow cropping images.
+
+ ````javascript
+$('input[type="file"]').upload({
+        preview: {
+            crop: true
+        }
 });
 ````
 
- ````html
-<form enctype="multipart/form-data" action="/javascript.php" method="post">
-    <input type="file" name="file"  multiple="multiple"/>
-    <div data-jq-upload-error></div>
-    <div data-jq-upload-preview></div>
-</form>
-  ````
-
-#jQuery Uploader Options 
- ````javascript
+Full configuration
+==============
+````javascript
 $('input[type="file"]').upload({
-    url: '/', //The url where the file will be sent to
-    preview: { 
-        selector: '[data-jq-upload-preview]', //Selector of item where preview will be displayed
-        container: '[data-jq-upload-preview-stored]',
-        width: 400, //Width of preview image
-        height: 200 //Height or preview image
-    },
-    trigger: {
-        type: 'button', //Available options ['button', 'dropzone']
-        attributes: {                                   // ['id', 'class', 'style'...]
-            id: 'button-id', //Trigger id attribute 
-            class: 'button-class', //Trigger class attribute
-            style: 'width:100px' //Trigger style attribute
-            ... //You can add whatever attribute you want to
-        }
-    },
-    selectFileText: 'Select file from your hard drive', //Text displayed inside button or dropzone
-    timeout: 8000, //Timeout of ajax request
-    maxFiles: 4, //Max available number of uploaded files
-    maxSize: '80000000', //Max size of single file in bytes
-    allowedMimeTypes: ['image/jpeg'], //Allowed mimetypes of uploaded files
-    allowedExtensions: ['jpg'], //Allowed extensions of uploaded files
-    error: {
-        selector: '[data-jq-upload-error]', //Selector where errors will be set when appear
-        attributes: { //Attributes of error html element
-            style: 'border:1px solid red; color:red;'
-            ... //You can add whatever attribute you want to
-        }
-    },
-    buttons: { 
-        upload: {
-            text: 'Upload a file' //Text of upload button,
-            attributes: {
-                id: 'button-upload-id',
-                class: 'button-upload-class',
-                ... //You can add whatever attribute you want to
+        browser : {
+            render: function() {
+                var button = (new Uploader.Html()).getButton();
+                $(button).text('Select file');
+                $('#browser').html(button);
+                return button;
             },
-            onClick: function(event, config) {} //It will be trigered on click for upload button
+            onDrop: function(htmlElement, event) {},
+            onClick: function(htmlElement, event) {},
+            onDragOver: function(htmlElement, event) {},
+            onDragEnter: function(htmlElement, event) {}
         },
-        cancel: {
-            text: 'Remove a file' //Text of remove button,
-            attributes: {
-                id: 'button-cancel-id',
-                class: 'button-cancel-class',
-                ... //You can add whatever attribute you want to
+        preview: {
+            render: function() { //Renders preview container
+                var ul = (new Uploader.Html()).getUl();
+                var li = (new Uploader.Html()).getLi();
+                var div = (new Uploader.Html()).getDiv();
+                var upload = (new Uploader.Html()).getButton();
+                var cancel = (new Uploader.Html()).getButton();
+                var progress = (new Uploader.Html()).getProgress();
+
+                $(upload).text('Upload file');
+                $(cancel).text('Cancel');
+                $('#preview').html(ul);
+
+                return {
+                    container: ul,
+                    item: li,
+                    preview: div,
+                    progress: progress,
+                    upload: upload,
+                    cancel: cancel
+                };
             },
-            onClick: function(event, config) {} //It will be trigered on click for cancel button.
-        },
-        uploadAll: {
-            text: 'Upload all files',
-            attributes: {
-                class: 'btn btn-form-submit'
-            }
-        }       
-    },
-    upload: {
-        onAbort: function(event, config) {}, //Function that is triggered when request is aborted
-        onError: function(event, config) {}, //Function that is triggered when request upload failed
-        onTimeout: function(event, config) {}, //Function that is triggered after timeout
-        onSuccess: function(event, config) {}, //Function that is triggered after successfully uploading
-        onLoadEnd: function(event, config) {}, //Function that is triggered when request is finished
-        onProgress: function(event, config) {}, //Function that is triggered during upload 
-        onLoadStart: function(event, config) {} //Function that is triggered when upload starts
-    }
-});
+            styles: { width: 500, height: 300},
+            maxFiles: 4,
+            minFileSize: '1KB',
+            maxFileSize: '10MB',
+            allowedMimeTypes: [],
+            allowedExtensions: ['jpg'],
+            forbiddenMimeTypes: [],
+            forbiddenExtensions: [],
+            errorMessages: {
+                forbidden: 'You cannot select forbidden file.',
+                tooLargeFile: 'Your file is too large.',
+                tooSmallFile: 'Your file is too small.',
+                tooManyFiles: 'You cannot upload more files.'
+            },
+            error: function(message) {
+                alert(message);
+            },
+            upload: {
+                url: '/upload',
+                onLoad: function(event, file, upload) {},
+                onAbort: function(event, file, upload) {},
+                onError: function(event, file, upload) {},
+                onLoadEnd: function(event, file, upload) {},
+                onTimeout: function(event, file, upload) {},
+                onProgress: function(event, file, upload) {},
+                onLoadStart: function(event, file, upload) {}
+            },
+            crop: true //not supported yet
+        }
+    });
 ````
