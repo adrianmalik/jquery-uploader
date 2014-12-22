@@ -225,15 +225,6 @@ $('input[type="file"]').upload({
         }
 });
 ````
-    - crop - is a {Boolean} value reserved for future reasons to allow cropping images.
-
- ````javascript
-$('input[type="file"]').upload({
-        preview: {
-            crop: true
-        }
-});
-````
 
 Full configuration
 ==============
@@ -299,8 +290,7 @@ $('input[type="file"]').upload({
                 onTimeout: function(event, file, upload) {},
                 onProgress: function(event, file, upload) {},
                 onLoadStart: function(event, file, upload) {}
-            },
-            crop: true //not supported yet
+            }
         }
     });
 ````
