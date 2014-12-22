@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="application/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script type="application/javascript" src="jquery-uploader.js"></script>
+        <script type="application/javascript" src="js/uploader.filter.js"></script>
+        <script type="application/javascript" src="js/uploader.validator.js"></script>
+        <script type="application/javascript" src="js/uploader.request.js"></script>
+        <script type="application/javascript" src="js/uploader.input.js"></script>
+        <script type="application/javascript" src="js/uploader.preview.js"></script>
+        <script type="application/javascript" src="js/uploader.browser.js"></script>
+        <script type="application/javascript" src="js/uploader.html.js"></script>
+        <script type="application/javascript" src="js/uploader.thumbnail.js"></script>
+        <title>Title of the document</title>
+    </head>
+    <body>
+        <input type="file">
+        <div id="browser"></div>
+        <div id="preview"></div>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('input[type="file"]').upload({
+                    browser : {
+                        render: function() {
+                            var button = (new Uploader.Html()).getButton();
+                            $(button).text('Select file');
+                            $('#browser').html(button);
+
+                            return button;
+                        },
+                        onDrop: function(htmlElement, event) {},
+                        onClick: function(htmlElement, event) {},
+                        onDragOver: function(htmlElement, event) {},
+                        onDragEnter: function(htmlElement, event) {}
+                    },
+                    preview: {
+                        render: function() {
+                            var ul = (new Uploader.Html()).getUl();
+                            var li = (new Uploader.Html()).getLi();
+                            var div = (new Uploader.Html()).getDiv();
+                            var upload = (new Uploader.Html()).getButton();
+                            var cancel = (new Uploader.Html()).getButton();
+                            var progress = (new Uploader.Html()).getProgress();
+
+                            $(upload).text('Upload file');
+                            $(cancel).text('Cancel');
+
+                            $(progress).attr('value', '0');
+                            $(progress).attr('max', 100);
+
+                            $('#preview').html(ul);
+
+                            return {
+                                container: ul,
+                                item: li,
+                                preview: div,
+                                progress: progress,
+                                upload: upload,
+                                cancel: cancel
+                            };
+                        },
+                        styles: { width: 500, height: 300},
+                        maxFiles: 4,
+                        minFileSize: '1KB',
+                        maxFileSize: '10MB',
+                        allowedMimeTypes: [],
+                        allowedExtensions: ['jpg'],
+                        forbiddenMimeTypes: [],
+                        forbiddenExtensions: [],
+                        errorMessages: {
+                            forbidden: 'You cannot select forbidden file.',
+                            tooLargeFile: 'Your file is too large.',
+                            tooSmallFile: 'Your file is too small.',
+                            tooManyFiles: 'You cannot upload more files.'
+                        },
+                        error: function(message) {
+                            alert(message);
+                        },
+                        upload: {
+                            url: 'http://localhost/jquery-uploader/upload.php',
+                            onLoad: function(event, file, upload) {},
+                            onAbort: function(event, file, upload) {},
+                            onError: function(event, file, upload) {},
+                            onLoadEnd: function(event, file, upload) {},
+                            onTimeout: function(event, file, upload) {},
+                            onProgress: function(event, file, upload) {},
+                            onLoadStart: function(event, file, upload) {}
+                        }
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
