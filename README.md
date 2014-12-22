@@ -6,8 +6,8 @@ Simple configuration
 ==============
 
  ````html
-<script src="/jquery/jquery.js"></script> <!-- At least 2.0 version -->
-<script src="/html5-uploader/html5-uploader.js"></script>
+<script src="/js/jquery.js"></script> <!-- At least 2.0 version -->
+<script src="/js/jquery-uploader.js"></script>
 
 <input type="file"> 
 <div id="browser"></div> <!-- File browser element -->
