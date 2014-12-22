@@ -243,7 +243,7 @@ $('input[type="file"]').upload({
             onDragEnter: function(htmlElement, event) {}
         },
         preview: {
-            render: function() { //Renders preview container
+            render: function() {
                 var ul = (new Uploader.Html()).getUl();
                 var li = (new Uploader.Html()).getLi();
                 var div = (new Uploader.Html()).getDiv();
