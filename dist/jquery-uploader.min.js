@@ -1,5 +1,5 @@
 /**
- * jQuery Uploader Library v. 2.0.3
+ * jQuery Uploader Library v. 2.0.4
  * https://github.com/adrianmalik/jquery-uploader
  *
  * Copyright 2015 Adrian Malik
