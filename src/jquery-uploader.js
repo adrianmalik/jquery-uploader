@@ -42,7 +42,6 @@ Uploader.Preview = function(params) {
     this.crop = params.crop; /* {Boolean} */
     this.error = params.error; /* {Function} */
     this.render = params.render; /* {Function} */
-    this.styles = params.styles; /* {Object} */
     this.upload = params.upload; /* {Object} */
     this.maxFiles = params.maxFiles; /* {Number} */
     this.minFileSize = params.minFileSize; /* {String} */
@@ -153,20 +152,18 @@ Uploader.Preview = function(params) {
 
     this.generatePreview = function(file) {
         var preview;
-        var styles = self.styles;
-
         var html = new Uploader.Html();
         var thumbnail = new Uploader.Thumbnail();
 
         switch(self.getHtmlThumbnailTagForFile(file)) {
             case html.TAG_IMG:
-                preview = thumbnail.getImage(file, styles);
+                preview = thumbnail.getImage(file);
                 break;
             case html.TAG_VIDEO:
-                preview = thumbnail.getVideo(file, styles);
+                preview = thumbnail.getVideo(file);
                 break;
             default:
-                preview = thumbnail.getDefault(file, styles);
+                preview = thumbnail.getDefault(file);
                 break;
         }
 
@@ -260,23 +257,12 @@ Uploader.Request = function(upload, file, progress, params) {
 Uploader.Thumbnail = function() {
     var self = this;
 
-    var setStyles = function(htmlElement, styles) {
-        if (typeof styles === 'object') {
-            for (var property in styles) {
-                $(htmlElement).css(property, styles[property]);
-            }
-        }
-
-        return self;
-    };
-
-    this.getImage = function(file, styles) {
+    this.getImage = function(file) {
         var img = (new Uploader.Html()).getImg();
         var reader = new FileReader();
 
         reader.onloadend = function() {
             img.src = reader.result;
-            setStyles(img, styles);
         };
 
         reader.readAsDataURL(file);
@@ -284,13 +270,12 @@ Uploader.Thumbnail = function() {
         return img;
     };
 
-    this.getVideo = function(file, styles) {
+    this.getVideo = function(file) {
         var video = new (Uploader.Html()).getVideo();
         var reader = new FileReader();
 
         reader.onloadend = function() {
             video.src = reader.result;
-            setStyles(video, styles);
         };
 
         reader.readAsDataURL(file);
@@ -298,7 +283,7 @@ Uploader.Thumbnail = function() {
         return video;
     };
 
-    this.getDefault = function(file, styles) {
+    this.getDefault = function(file) {
         return file.name;
     };
 
