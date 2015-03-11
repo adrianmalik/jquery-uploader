@@ -3,14 +3,6 @@
     <head>
         <script type="application/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
         <script type="application/javascript" src="jquery-uploader.js"></script>
-        <script type="application/javascript" src="js/uploader.filter.js"></script>
-        <script type="application/javascript" src="js/uploader.validator.js"></script>
-        <script type="application/javascript" src="js/uploader.request.js"></script>
-        <script type="application/javascript" src="js/uploader.input.js"></script>
-        <script type="application/javascript" src="js/uploader.preview.js"></script>
-        <script type="application/javascript" src="js/uploader.browser.js"></script>
-        <script type="application/javascript" src="js/uploader.html.js"></script>
-        <script type="application/javascript" src="js/uploader.thumbnail.js"></script>
         <title>Title of the document</title>
     </head>
     <body>
@@ -32,7 +24,8 @@
                         onDrop: function(htmlElement, event) {},
                         onClick: function(htmlElement, event) {},
                         onDragOver: function(htmlElement, event) {},
-                        onDragEnter: function(htmlElement, event) {}
+                        onDragEnter: function(htmlElement, event) {},
+                        onDragLeave: function(htmlElement, event) {}
                     },
                     preview: {
                         render: function() {
@@ -82,6 +75,7 @@
                             onLoad: function(event, file, upload) {},
                             onAbort: function(event, file, upload) {},
                             onError: function(event, file, upload) {},
+                            onSuccess: function(event, file, upload) {},
                             onLoadEnd: function(event, file, upload) {},
                             onTimeout: function(event, file, upload) {},
                             onProgress: function(event, file, upload) {},
