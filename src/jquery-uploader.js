@@ -1,5 +1,5 @@
 /**
- * jQuery Uploader Library v. 2.0.2
+ * jQuery Uploader Library v. 2.0.3
  * https://github.com/adrianmalik/jquery-uploader
  *
  * Copyright 2015 Adrian Malik
@@ -729,3 +729,23 @@ Uploader.Html = function() {
         return progress;
     };
 };
+
+$(document).ready(function() {
+    jQuery.fn.upload = function(construct) {
+        var params = (new Uploader.Filter()).filterParams(construct);
+        var browser = new Uploader.Browser(params.browser);
+        var preview = new Uploader.Preview(params.preview);
+        var input = (new Uploader.Input(this[0], params));
+
+        input.hide().attachOnChange(preview);
+
+        browser.render();
+        browser.attachOnClick(input);
+        browser.attachOnDrop(preview);
+        browser.attachOnDragEnter();
+        browser.attachOnDragOver();
+        browser.attachOnDragLeave();
+
+        preview.renderContainer();
+    };
+});
