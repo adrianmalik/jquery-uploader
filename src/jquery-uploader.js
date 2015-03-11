@@ -1,10 +1,10 @@
 /**
- * jQuery Uploader
+ * jQuery Uploader Library v. 2.0.2
+ * https://github.com/adrianmalik/jquery-uploader
  *
- * @author Adrian Malik <adrian.malik.89@gmail.com>
- * @version 2.0.1
+ * Copyright 2015 Adrian Malik
+ * Released under the MIT license
  */
-
 var Uploader = {};
 
 Uploader.Input = function(htmlElement, params) {
