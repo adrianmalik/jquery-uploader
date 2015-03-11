@@ -79,6 +79,8 @@ $('input[type="file"]').upload({
         }
 });
 ````
+    - onDragLeave(htmlElement, event) - is a {function} where you can implement behaviour for leaving mouse cursor from dropzone area.
+    
 - preview - is an {Object} element which allows you to conifugre type of files you are going to upload, design and view about preview elements and many more.
 
     - render() - is a {Function} where you can buid your preview container and all of it's elements.
