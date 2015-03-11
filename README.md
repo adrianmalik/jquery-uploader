@@ -74,12 +74,21 @@ $('input[type="file"]').upload({
 $('input[type="file"]').upload({
         browser: {
             onDragEnter: function(htmlElement, event) {
-                alert('You have just entered your file to dropzone');
+                $(htmlElement).addClass('hover');
             }
         }
 });
 ````
     - onDragLeave(htmlElement, event) - is a {function} where you can implement behaviour for leaving mouse cursor from dropzone area.
+````javascript
+$('input[type="file"]').upload({
+        browser: {
+            onDragLeave: function(htmlElement, event) {
+                $(htmlElement).removeClass('hover');
+            }
+        }
+});
+````
     
 - preview - is an {Object} element which allows you to conifugre type of files you are going to upload, design and view about preview elements and many more.
 
@@ -242,7 +251,8 @@ $('input[type="file"]').upload({
             onDrop: function(htmlElement, event) {},
             onClick: function(htmlElement, event) {},
             onDragOver: function(htmlElement, event) {},
-            onDragEnter: function(htmlElement, event) {}
+            onDragEnter: function(htmlElement, event) {},
+            onDragLeave: function(htmlElement, event) {}
         },
         preview: {
             render: function() {
@@ -288,6 +298,7 @@ $('input[type="file"]').upload({
                 onLoad: function(event, file, upload) {},
                 onAbort: function(event, file, upload) {},
                 onError: function(event, file, upload) {},
+                onSuccess: function(event, file, upload) {},
                 onLoadEnd: function(event, file, upload) {},
                 onTimeout: function(event, file, upload) {},
                 onProgress: function(event, file, upload) {},
