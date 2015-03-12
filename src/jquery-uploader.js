@@ -1,5 +1,5 @@
 /**
- * jQuery Uploader Library v. 2.0.4
+ * jQuery Uploader Library v. 2.0.5
  * https://github.com/adrianmalik/jquery-uploader
  *
  * Copyright 2015 Adrian Malik
@@ -31,10 +31,16 @@ Uploader.Input = function(htmlElement, params) {
         return htmlElement;
     };
 
+    this.getName = function() {
+        var name = $(htmlElement).attr('name');
+        $(htmlElement).removeAttr('name');
+        return name;
+    }
+
     return self;
 };
 
-Uploader.Preview = function(params) {
+Uploader.Preview = function(params, input) {
     var self = this;
 
     this.counter; /* {Number} */
@@ -194,7 +200,7 @@ Uploader.Preview = function(params) {
         var request;
 
         $(upload).on('click', function(event) {
-            request = new Uploader.Request(upload, file, progress, self.upload);
+            request = new Uploader.Request(input.getName(), file, self.upload, upload, progress);
             event.preventDefault();
         });
 
@@ -210,7 +216,7 @@ Uploader.Preview = function(params) {
     };
 };
 
-Uploader.Request = function(upload, file, progress, params) {
+Uploader.Request = function(name, file, params, upload, progress) {
     var self = this;
     var request = new XMLHttpRequest();
     request.open('POST', params.url);
@@ -249,7 +255,7 @@ Uploader.Request = function(upload, file, progress, params) {
     };
 
     var formData = new FormData();
-    formData.append('files', file);
+    formData.append(name, file);
     request.send(formData);
     return request;
 };
@@ -719,8 +725,8 @@ $(document).ready(function() {
     jQuery.fn.upload = function(construct) {
         var params = (new Uploader.Filter()).filterParams(construct);
         var browser = new Uploader.Browser(params.browser);
-        var preview = new Uploader.Preview(params.preview);
         var input = (new Uploader.Input(this[0], params));
+        var preview = new Uploader.Preview(params.preview, input);
 
         input.hide().attachOnChange(preview);
 
