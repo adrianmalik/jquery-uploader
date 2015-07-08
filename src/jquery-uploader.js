@@ -1,5 +1,5 @@
 /**
- * jQuery Uploader Library v. 2.0.5
+ * jQuery Uploader Library v. 2.0.6
  * https://github.com/adrianmalik/jquery-uploader
  *
  * Copyright 2015 Adrian Malik
@@ -43,20 +43,20 @@ Uploader.Input = function(htmlElement, params) {
 Uploader.Preview = function(params, input) {
     var self = this;
 
-    this.counter; /* {Number} */
-    this.htmlElements; /* {HTMLElement} */
-    this.crop = params.crop; /* {Boolean} */
-    this.error = params.error; /* {Function} */
-    this.render = params.render; /* {Function} */
-    this.upload = params.upload; /* {Object} */
-    this.maxFiles = params.maxFiles; /* {Number} */
-    this.minFileSize = params.minFileSize; /* {String} */
-    this.maxFileSize = params.maxFileSize; /* {String} */
-    this.errorMessages = params.errorMessages; /* {Object} */
-    this.allowedMimeTypes = params.allowedMimeTypes; /* {Object} */
-    this.allowedExtensions = params.allowedExtensions; /* {Object} */
-    this.forbiddenMimeTypes = params.forbiddenMimeTypes; /* {Object} */
-    this.forbiddenExtensions = params.forbiddenExtensions; /* {Object} */
+    this.counter;
+    this.htmlElements;
+    this.error = params.error;
+    this.render = params.render;
+    this.onRenderEnd = params.onRenderEnd;
+    this.upload = params.upload;
+    this.maxFiles = params.maxFiles;
+    this.minFileSize = params.minFileSize;
+    this.maxFileSize = params.maxFileSize;
+    this.errorMessages = params.errorMessages;
+    this.allowedMimeTypes = params.allowedMimeTypes;
+    this.allowedExtensions = params.allowedExtensions;
+    this.forbiddenMimeTypes = params.forbiddenMimeTypes;
+    this.forbiddenExtensions = params.forbiddenExtensions;
 
     this.renderContainer = function() {
         self.htmlElements = self.render();
@@ -111,10 +111,6 @@ Uploader.Preview = function(params, input) {
             error = validator.validateFilesNumber(self.maxFiles, self.counter, self.errorMessages);
         }
 
-        if (!error) {
-            error = validator.validateCropping(self.getHtmlThumbnailTagForFile(file), self.crop);
-        }
-
         return error;
     };
 
@@ -154,6 +150,7 @@ Uploader.Preview = function(params, input) {
         }
 
         self.attachUploadEvent(upload, cancel, file, progress, item);
+        self.onRenderEnd(item);
     };
 
     this.generatePreview = function(file) {
@@ -481,17 +478,6 @@ Uploader.Validator = function() {
 
         return error;
     };
-
-    this.validateCropping = function(tag, isCropping) {
-        var error = null;
-        var html = new Uploader.Html();
-
-        if (isCropping && tag !== html.TAG_IMG) {
-            error = 'You can only crop images.';
-        }
-
-        return error;
-    };
 };
 
 Uploader.Filter = function() {
@@ -553,6 +539,10 @@ Uploader.Filter = function() {
             params.upload = {};
         }
 
+        if (typeof params.onRenderEnd !== 'function') {
+            params.onRenderEnd = function(renderedItem) {};
+        }
+
         if (typeof params.upload.onLoadStart !== 'function') {
             params.upload.onLoadStart = function(event, file, upload) {};
         }
@@ -587,10 +577,6 @@ Uploader.Filter = function() {
 
         if (typeof params.upload.url !== 'string') {
             params.upload.url = '/upload';
-        }
-
-        if (typeof params.crop !== 'boolean') {
-            params.crop = false;
         }
 
         if (typeof params.maxFiles !== 'undefined' && isNaN(params.maxFiles)) {
