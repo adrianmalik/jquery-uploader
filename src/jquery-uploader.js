@@ -253,6 +253,7 @@ Uploader.Request = function(name, file, params, upload, progress) {
 
     var formData = new FormData();
     formData.append(name, file);
+    formData = params.beforeSend(formData, file, upload);
     request.send(formData);
     return request;
 };
@@ -573,6 +574,12 @@ Uploader.Filter = function() {
 
         if (typeof params.upload.onTimeout !== 'function') {
             params.upload.onTimeout = function(event, file, upload) {};
+        }
+
+        if (typeof params.upload.beforeSend !== 'function') {
+            params.upload.beforeSend = function(data) {
+                return data;
+            }
         }
 
         if (typeof params.upload.url !== 'string') {
