@@ -48,6 +48,7 @@ Uploader.Preview = function(params, input) {
     this.error = params.error;
     this.render = params.render;
     this.onRenderEnd = params.onRenderEnd;
+    this.beforeCancel = params.beforeCancel;
     this.upload = params.upload;
     this.maxFiles = params.maxFiles;
     this.minFileSize = params.minFileSize;
@@ -205,6 +206,7 @@ Uploader.Preview = function(params, input) {
             if (typeof request !== 'undefined') {
                 request.abort();
             }
+            self.beforeCancel(item);
 
             $(item).remove();
             self.counter--;
@@ -530,6 +532,10 @@ Uploader.Filter = function() {
 
         if (typeof params.onDragEnter !== 'function') {
             params.onDragEnter = function(htmlElement, event) {};
+        }
+
+        if (typeof params.beforeCancel !== 'function') {
+            params.beforeCancel = function(item) {};
         }
 
         return params;
