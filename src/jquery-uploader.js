@@ -12,7 +12,8 @@ Uploader.Input = function(htmlElement, params) {
 
     this.attachOnChange = function(preview) {
         $(htmlElement).on('change', function(event) {
-            var files = event.originalEvent.srcElement.files;
+            var target = event.originalEvent.target || event.originalEvent.srcElement;
+            var files = target.files;
             for (var i = 0; i < files.length; i++) {
                 preview.renderItem(files[i]);
             }
